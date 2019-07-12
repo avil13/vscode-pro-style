@@ -10,7 +10,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.proStyle"
+        "onCommand:extension.proStyleAdd"
     ],
     "main": "./out/extension.js",
     "contributes": {

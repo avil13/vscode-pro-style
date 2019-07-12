@@ -3,14 +3,14 @@ const path = require('path');
 
 
 
-export function getEnv(context: vscode.ExtensionContext) {
+export function getEnv(context: vscode.ExtensionContext | null) {
     type keyEnvParams = keyof typeof params;
 
     const params = {
         isWin: /^win/.test(process.platform),
 
         get appDir() {
-            return context.extensionPath;
+            return context ? context.extensionPath : '';
         },
 
         get base() {

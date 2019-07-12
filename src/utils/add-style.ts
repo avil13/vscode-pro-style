@@ -3,21 +3,21 @@ import { getEnv } from './env';
 import { checkHash } from './check-hash';
 import { readFileAsync, writeFileAsync } from './fs-async';
 
-export const addStyle = async (context: vscode.ExtensionContext, styleCode: string) => {
+export const addStyle = async (context: vscode.ExtensionContext | null, styleCode: string) => {
     const env = getEnv(context);
 
     const htmlFile = env('htmlFile');
 
     let html = await readFileAsync(htmlFile, 'utf-8');
 
-    const regMyCode = new RegExp(`${env('styleMarkStart')}[^]*?${env('styleMarkEnd')}`);
+    const oldCodeRE = new RegExp(`${env('styleMarkStart')}[^]*?${env('styleMarkEnd')}`);
     const strStyleCodeBlock = styleCode ? env('styleMarkStart') + styleCode + env('styleMarkEnd') : '';
 
-    if (isStringExists(html, strStyleCodeBlock, regMyCode)) {
+    if (isStringExists(html, strStyleCodeBlock, oldCodeRE)) {
         return;
     }
 
-    html = html.replace(regMyCode, '');
+    html = html.replace(oldCodeRE, '');
     html = html.replace(/(<\/html>)/, strStyleCodeBlock + '</html>');
 
     await writeFileAsync(htmlFile, html, 'utf-8');

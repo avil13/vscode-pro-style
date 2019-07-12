@@ -20,6 +20,9 @@ export function activate(context: vscode.ExtensionContext) {
         (async () => {
             try {
                 const style = await getStyles(context);
+
+                console.log(style);
+
                 await addStyle(context, style);
                 await enabledRestart(msg.title, msg.enabled);
             } catch (err) {
@@ -28,13 +31,15 @@ export function activate(context: vscode.ExtensionContext) {
         })();
     });
 
-    const removeStyleCommand = vscode.commands.registerCommand('extension.proStyleRemove', async () => {
-        try {
-            await addStyle(context, '');
-            await enabledRestart(msg.title, msg.disabled);
-        } catch (err) {
-            vscode.window.showErrorMessage(`ProStyle error: ${err}`);
-        }
+    const removeStyleCommand = vscode.commands.registerCommand('extension.proStyleRemove', () => {
+        (async () => {
+            try {
+                await addStyle(null, '');
+                await enabledRestart(msg.title, msg.disabled);
+            } catch (err) {
+                vscode.window.showErrorMessage(`ProStyle error: ${err}`);
+            }
+        })();
     });
 
     context.subscriptions.push(addingStyleCommand);
@@ -42,4 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+    addStyle(null, '');
+}
